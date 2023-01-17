@@ -14,11 +14,12 @@ os.chdir("kitsunekko")
 # accepts any of the dirlist.php urls
 urls_todo = ["https://kitsunekko.net/dirlist.php?dir=subtitles%2Fjapanese%2F"]
 download_links = []
+request_wait = 5
 
 # scrape urls recursively
 while urls_todo:
     print("rate limiting for 5 seconds")
-    time.sleep(5)
+    time.sleep(request_wait)
     url = urls_todo.pop()
     print(f"processing url: {url}")
     ret = requests.get(url)
@@ -49,9 +50,7 @@ for link in download_links:
     # stream the download directly to a file
     with open("/".join(full_path), "wb") as f:
         print("rate limiting for 5 seconds")
-        time.sleep(
-            5
-        )  # sleep after rate limit message so stopping early can be done cleanly
+        time.sleep(request_wait)
         print(f"Downloading new file: {'/'.join(full_path)}")
         with requests.get(link, stream=True) as r:
             shutil.copyfileobj(r.raw, f)
